@@ -1,5 +1,6 @@
 package com.jdiassdev.wheredidmymoneygo.entity;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +13,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 @Getter
-// @Setter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 
@@ -21,8 +22,8 @@ import lombok.*;
 public class User {
 
     @Id
-    @GeneratedValue(generator = "UUID")
-    @Column(columnDefinition = "UUID", updatable = false, nullable = false)
+    @GeneratedValue
+    @Column(columnDefinition = "CHAR(36)")
     private UUID id;
 
     @NotBlank
@@ -30,13 +31,17 @@ public class User {
 
     @Email
     @NotBlank
+    @Column(nullable = false, unique = true)
     private String email;
 
+    @NotBlank
+    private String password;
+
     @Column(name = "monthly_salary", nullable = false)
-    private double monthlySalary = 0.0;
+    private BigDecimal monthlySalary = BigDecimal.ZERO;
 
     @Column(name = "expensive_threshold", nullable = false)
-    private double expensiveThreshold = 100.0;
+    private BigDecimal expensiveThreshold = BigDecimal.ZERO;
 
     @OneToMany(mappedBy = "user")
     private List<Transaction> transactions = new ArrayList<>();

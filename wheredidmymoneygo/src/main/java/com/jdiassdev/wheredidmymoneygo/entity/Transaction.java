@@ -1,5 +1,6 @@
 package com.jdiassdev.wheredidmymoneygo.entity;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -21,8 +22,8 @@ import jakarta.validation.constraints.Positive;
 public class Transaction {
 
     @Id
-    @GeneratedValue(generator = "UUID")
-    @Column(columnDefinition = "UUID", updatable = false, nullable = false)
+    @GeneratedValue
+    @Column(columnDefinition = "CHAR(36)")
     private UUID id;
 
     @ManyToOne
@@ -33,7 +34,7 @@ public class Transaction {
     private String description;
 
     @Positive
-    private double amount;
+    private BigDecimal amount = BigDecimal.ZERO;
 
     @Enumerated(EnumType.STRING)
     private TransactionType type; // NORMAL | CARO
@@ -54,7 +55,7 @@ public class Transaction {
     }
 
     public void updateType() {
-        if (amount >= user.getExpensiveThreshold()) {
+        if (amount.compareTo(user.getExpensiveThreshold()) >= 0) {
             type = TransactionType.CARO;
         } else {
             type = TransactionType.NORMAL;

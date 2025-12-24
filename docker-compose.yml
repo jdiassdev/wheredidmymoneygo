@@ -1,17 +1,16 @@
 version: '3.8'
 
 services:
-  postgres:
-    image: postgres:15
-    container_name: wheredidmymoneygo_postgres
+  mysql:
+    image: mysql:8.0
+    container_name: wheredidmymoneygo_mysql
     environment:
-      POSTGRES_USER: dias
-      POSTGRES_PASSWORD: dias
-      POSTGRES_DB: wheredidmymoneygo
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: where_did_my_money_go
     ports:
-      - "5432:5432"
+      - "3306:3306"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - mysql_data:/var/lib/mysql
 
 volumes:
-  postgres_data:
+  mysql_data:
