@@ -46,7 +46,7 @@ public class Transaction {
 
     @PrePersist
     void onCreate() {
-        createdAt = LocalDateTime.now();
+        createdAt = LocalDateTime.now().withNano(0);
     }
 
     public enum TransactionType {
