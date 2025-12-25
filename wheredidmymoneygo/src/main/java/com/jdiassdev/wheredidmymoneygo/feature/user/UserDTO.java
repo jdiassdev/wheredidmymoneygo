@@ -1,27 +1,22 @@
 package com.jdiassdev.wheredidmymoneygo.feature.user;
 
-import java.util.UUID;
+public record UserDTO(
+                Long id,
+                String name,
+                String email) {
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-
-public class UserDTO {
-
-        public record CreateRequest(
-                        @NotBlank String name,
-                        @Email String email,
-                        @NotBlank String password) {
+        public record GetByIdResponse(Long id, String name, String email) {
         }
 
-        public record CreateResponse(
-                        UUID id,
-                        String name,
-                        String email) {
+        public record CreateRequest(String name, String email, String password) {
         }
 
-        public record getByIdResponse(
-                        UUID id,
-                        String name,
-                        String email) {
+        public record CreateResponse(Long id, String name, String email) {
+        }
+
+        public record LoginRequest(String email, String password) {
+        }
+
+        public record LoginResponse(String email) {
         }
 }

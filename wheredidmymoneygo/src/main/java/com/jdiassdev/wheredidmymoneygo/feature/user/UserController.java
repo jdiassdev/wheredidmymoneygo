@@ -1,7 +1,7 @@
 package com.jdiassdev.wheredidmymoneygo.feature.user;
 
-import java.util.UUID;
-
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,13 +22,20 @@ public class UserController {
           this.userService = userService;
      }
 
-     @GetMapping("/{id}")
-     public UserDTO.getByIdResponse me(@PathVariable UUID id) {
-          return userService.getById(id);
+     @PostMapping
+     public ResponseEntity<UserDTO.CreateResponse> create(@RequestBody @Valid UserDTO.CreateRequest dto) {
+          UserDTO.CreateResponse response = userService.create(dto);
+          return ResponseEntity.status(HttpStatus.CREATED).body(response);
      }
 
-     @PostMapping
-     public UserDTO.CreateResponse create(@RequestBody @Valid UserDTO.CreateRequest dto) {
-          return userService.create(dto);
+     @PostMapping("/auth")
+     public ResponseEntity<UserDTO.LoginResponse> login(@RequestBody @Valid UserDTO.LoginRequest dto) {
+          UserDTO.LoginResponse response = userService.login(dto);
+          return ResponseEntity.status(HttpStatus.CREATED).body(response);
+     }
+
+     @GetMapping("/{id}")
+     public UserDTO.GetByIdResponse me(@PathVariable Long id) {
+          return userService.findUserById(id);
      }
 }

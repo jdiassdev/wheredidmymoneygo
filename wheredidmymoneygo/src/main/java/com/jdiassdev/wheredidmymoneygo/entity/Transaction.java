@@ -2,13 +2,13 @@ package com.jdiassdev.wheredidmymoneygo.entity;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -22,9 +22,8 @@ import jakarta.validation.constraints.Positive;
 public class Transaction {
 
     @Id
-    @GeneratedValue
-    @Column(columnDefinition = "CHAR(36)")
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // auto-icrement
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)

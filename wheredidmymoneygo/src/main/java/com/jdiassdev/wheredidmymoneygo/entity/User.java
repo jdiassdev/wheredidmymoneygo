@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -22,19 +21,20 @@ import lombok.*;
 public class User {
 
     @Id
-    @GeneratedValue
-    @Column(columnDefinition = "CHAR(36)")
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // auto-icrement
+    private Long id;
 
     @NotBlank
+    @Column(name = "name")
     private String name;
 
     @Email
     @NotBlank
-    @Column(nullable = false, unique = true)
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
 
     @NotBlank
+    @Column(name = "password")
     private String password;
 
     @Column(name = "monthly_salary", nullable = false)

@@ -1,8 +1,5 @@
 package com.jdiassdev.wheredidmymoneygo.feature.user;
 
-import java.util.UUID;
-
-
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -20,17 +17,6 @@ public class UserService {
 
     }
 
-    public UserDTO.getByIdResponse getById(UUID id) {
-
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
-
-        return new UserDTO.getByIdResponse(
-                user.getId(),
-                user.getName(),
-                user.getEmail());
-    }
-
     public UserDTO.CreateResponse create(UserDTO.CreateRequest dto) {
 
         if (userRepository.findByEmail(dto.email()).isPresent()) {
@@ -41,8 +27,9 @@ public class UserService {
         user.setName(dto.name());
         user.setEmail(dto.email());
         user.setPassword(passwordEncoder.encode(dto.password()));
-
+        System.out.println("User before save: " + user);
         user = userRepository.save(user);
+        System.out.println("User after save: " + user);
 
         return new UserDTO.CreateResponse(
                 user.getId(),
@@ -50,5 +37,28 @@ public class UserService {
                 user.getEmail());
     }
 
-    // public User
+    public UserDTO.GetByIdResponse findUserById(Long id) {
+
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+
+        return new UserDTO.GetByIdResponse(
+                user.getId(),
+                user.getName(),
+                user.getEmail());
+    }
+
+    public UserDTO.LoginResponse login(UserDTO.LoginRequest dto) {
+
+        User user = userRepository.findByEmail(dto.email())
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+
+        if (!passwordEncoder.matches(dto.password(), user.getPassword())) {
+            throw new RuntimeException("Senha incorreta");
+        }
+
+        return new UserDTO.LoginResponse(
+                user.getEmail());
+
+    }
 }
