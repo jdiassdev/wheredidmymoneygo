@@ -3,6 +3,7 @@ package com.jdiassdev.wheredidmymoneygo.feature.user;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,11 +32,17 @@ public class UserController {
      @PostMapping("/auth")
      public ResponseEntity<UserDTO.LoginResponse> login(@RequestBody @Valid UserDTO.LoginRequest dto) {
           UserDTO.LoginResponse response = userService.login(dto);
-          return ResponseEntity.status(HttpStatus.CREATED).body(response);
+          return ResponseEntity.ok(response);
      }
 
      @GetMapping("/{id}")
      public UserDTO.GetByIdResponse me(@PathVariable Long id) {
           return userService.findUserById(id);
+     }
+
+     @PatchMapping("/complete-data")
+     public ResponseEntity<UserDTO.CompleteDataResponse> completeUserData(@RequestBody @Valid UserDTO.CompleteDataRequest dto) {
+          UserDTO.CompleteDataResponse response = userService.completeDataUser(dto);
+          return ResponseEntity.ok(response);
      }
 }
