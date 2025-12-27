@@ -3,6 +3,7 @@ package com.jdiassdev.wheredidmymoneygo.feature.user;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.jdiassdev.wheredidmymoneygo.Utils.Security.TokenService;
 import com.jdiassdev.wheredidmymoneygo.entity.User;
 
 @Service
@@ -10,10 +11,15 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final TokenService tokenService;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(
+            UserRepository userRepository,
+            PasswordEncoder passwordEncoder,
+            TokenService tokenService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.tokenService = tokenService;
 
     }
 
@@ -27,9 +33,7 @@ public class UserService {
         user.setName(dto.name());
         user.setEmail(dto.email());
         user.setPassword(passwordEncoder.encode(dto.password()));
-        // System.out.println("User before save: " + user);
         user = userRepository.save(user);
-        // System.out.println("User after save: " + user);
 
         return new UserDTO.CreateResponse(
                 user.getId(),
@@ -46,8 +50,11 @@ public class UserService {
             throw new RuntimeException("Senha incorreta");
         }
 
+        String token = this.tokenService.generateToken(user);
+
         return new UserDTO.LoginResponse(
-                user.getEmail());
+                token,
+                user.getName());
 
     }
 
@@ -63,7 +70,7 @@ public class UserService {
     }
 
     public UserDTO.CompleteDataResponse completeDataUser(UserDTO.CompleteDataRequest dto) {
-        
+
         // intancia o usuario q ele achar a variavel user
         User user = userRepository.findByEmail(dto.email())
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));

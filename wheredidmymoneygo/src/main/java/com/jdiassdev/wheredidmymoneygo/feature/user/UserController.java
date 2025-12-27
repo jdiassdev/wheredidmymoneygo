@@ -23,13 +23,13 @@ public class UserController {
           this.userService = userService;
      }
 
-     @PostMapping
+     @PostMapping("/auth/sign-up")
      public ResponseEntity<UserDTO.CreateResponse> create(@RequestBody @Valid UserDTO.CreateRequest dto) {
           UserDTO.CreateResponse response = userService.create(dto);
           return ResponseEntity.status(HttpStatus.CREATED).body(response);
      }
 
-     @PostMapping("/auth")
+     @PostMapping("/auth/sign-in")
      public ResponseEntity<UserDTO.LoginResponse> login(@RequestBody @Valid UserDTO.LoginRequest dto) {
           UserDTO.LoginResponse response = userService.login(dto);
           return ResponseEntity.ok(response);
