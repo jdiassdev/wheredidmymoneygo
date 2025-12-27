@@ -53,8 +53,8 @@ public class UserService {
         String token = this.tokenService.generateToken(user);
 
         return new UserDTO.LoginResponse(
-                token,
-                user.getName());
+                user.getName(),
+                token);
 
     }
 
