@@ -13,6 +13,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.jdiassdev.wheredidmymoneygo.dto.AuthUser;
 import com.jdiassdev.wheredidmymoneygo.entity.User;
 
 @Service
@@ -26,7 +27,8 @@ public class TokenService {
 
             String token = JWT.create()
                     .withIssuer("auth-logged")
-                    .withSubject(user.getEmail())
+                    .withSubject(user.getId().toString())
+                    .withClaim("email", user.getEmail())
                     .withExpiresAt(this.generateExpirationDate())
                     .sign(algorithm);
 
@@ -36,15 +38,18 @@ public class TokenService {
         }
     }
 
-    public String validatedToken(String token) {
+    public AuthUser validateToken(String token) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
 
-            return JWT.require(algorithm)
+            var decoded = JWT.require(algorithm)
                     .withIssuer("auth-logged")
                     .build()
-                    .verify(token)
-                    .getSubject();
+                    .verify(token);
+
+            return new AuthUser(
+                    Long.valueOf(decoded.getSubject()),
+                    decoded.getClaim("email").asString());
 
         } catch (JWTVerificationException e) {
             return null;

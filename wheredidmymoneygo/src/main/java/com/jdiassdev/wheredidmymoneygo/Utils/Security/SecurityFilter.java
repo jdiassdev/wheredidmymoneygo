@@ -11,8 +11,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.jdiassdev.wheredidmymoneygo.entity.User;
-
 import java.io.IOException;
 import java.util.Collections;
 
@@ -27,12 +25,19 @@ public class SecurityFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         var token = this.recoverToken(request);
-        var login = tokenService.validatedToken(token);
+        var authUser = tokenService.validateToken(token);
 
-        if (login != null) {
-            User user = userRepository.findByEmail(login).orElseThrow(() -> new RuntimeException("User Not Found"));
+        if (authUser != null) {
+
+            // User user = userRepository.findByEmail(login).orElseThrow(() -> new
+            // RuntimeException("Usuario não encontrado"));
+
+            // AuthUser authUserData = new AuthUser(
+            // user.getId(),
+            // user.getEmail());
+
             var authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
-            var authentication = new UsernamePasswordAuthenticationToken(user, null, authorities);
+            var authentication = new UsernamePasswordAuthenticationToken(authUser, null, authorities);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
         filterChain.doFilter(request, response);

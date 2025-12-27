@@ -2,14 +2,17 @@ package com.jdiassdev.wheredidmymoneygo.feature.user;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
+
+import com.jdiassdev.wheredidmymoneygo.dto.AuthUser;
 
 import jakarta.validation.Valid;
 
@@ -35,13 +38,15 @@ public class UserController {
           return ResponseEntity.ok(response);
      }
 
-     @GetMapping("/{id}")
-     public UserDTO.GetByIdResponse me(@PathVariable Long id) {
-          return userService.findUserById(id);
+     @GetMapping("/me")
+     public UserDTO.GetByIdResponse me(@AuthenticationPrincipal AuthUser user) {
+
+          return userService.findByEmail(user.email());
      }
 
      @PatchMapping("/complete-data")
-     public ResponseEntity<UserDTO.CompleteDataResponse> completeUserData(@RequestBody @Valid UserDTO.CompleteDataRequest dto) {
+     public ResponseEntity<UserDTO.CompleteDataResponse> completeUserData(
+               @RequestBody @Valid UserDTO.CompleteDataRequest dto) {
           UserDTO.CompleteDataResponse response = userService.completeDataUser(dto);
           return ResponseEntity.ok(response);
      }

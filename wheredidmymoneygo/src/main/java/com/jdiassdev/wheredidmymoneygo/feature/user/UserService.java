@@ -53,14 +53,14 @@ public class UserService {
         String token = this.tokenService.generateToken(user);
 
         return new UserDTO.LoginResponse(
-                user.getName(),
-                token);
+                token,
+                user.getName());
 
     }
 
-    public UserDTO.GetByIdResponse findUserById(Long id) {
+    public UserDTO.GetByIdResponse findByEmail(String email) {
 
-        User user = userRepository.findById(id)
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
         return new UserDTO.GetByIdResponse(
