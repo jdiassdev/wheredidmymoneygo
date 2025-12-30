@@ -11,13 +11,11 @@ public final class TransactionDTO {
     private TransactionDTO() {
     }
 
-    /* ========= REQUESTS ========= */
-
     public record CreateRequest(
 
             @NotNull(message = "Valor é obrigatório") @Positive(message = "Valor deve ser maior que zero") BigDecimal amount,
 
-            @NotBlank(message = "Categoria é obrigatória") String category,
+            @NotNull(message = "Categoria é obrigatória") Long category_id,
 
             @NotBlank(message = "Descrição é obrigatória") String description) {
     }

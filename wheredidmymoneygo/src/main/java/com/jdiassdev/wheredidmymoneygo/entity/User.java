@@ -54,12 +54,12 @@ public class User {
 
     @PrePersist
     protected void onCreate() {
-        createdAt = LocalDateTime.now().withNano(0);
+        createdAt = LocalDateTime.now();
     }
 
     @PreUpdate
     protected void onUpdate() {
-        updatedAt = LocalDateTime.now().withNano(0);
+        updatedAt = LocalDateTime.now();
     }
 
 }

@@ -69,18 +69,18 @@ public class UserService {
                 user.getEmail());
     }
 
-    public UserDTO.CompleteDataResponse completeDataUser(UserDTO.CompleteDataRequest dto) {
+    public UserDTO.CompleteDataResponse completeDataUser(String email, UserDTO.CompleteDataRequest dto) {
 
-        // intancia o usuario q ele achar a variavel user
-        User user = userRepository.findByEmail(dto.email())
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
-        // insert or update os campos que estavam faltando
-        if (dto.monthlySalary() != null) {
-            user.setMonthlySalary(dto.monthlySalary());
+        System.out.println("User:>" + user.getName() + " " + dto.expensive_threshold() + " " + dto.monthly_salary());
+
+        if (dto.monthly_salary() != null) {
+            user.setMonthlySalary(dto.monthly_salary());
         }
-        if (dto.expensiveThreshold() != null) {
-            user.setExpensiveThreshold(dto.expensiveThreshold());
+        if (dto.expensive_threshold() != null) {
+            user.setExpensiveThreshold(dto.expensive_threshold());
         }
 
         user = userRepository.save(user);

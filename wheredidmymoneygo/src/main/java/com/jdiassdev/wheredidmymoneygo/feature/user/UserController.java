@@ -46,8 +46,9 @@ public class UserController {
 
      @PatchMapping("/complete-data")
      public ResponseEntity<UserDTO.CompleteDataResponse> completeUserData(
+               @AuthenticationPrincipal AuthUser user,
                @RequestBody @Valid UserDTO.CompleteDataRequest dto) {
-          UserDTO.CompleteDataResponse response = userService.completeDataUser(dto);
+          UserDTO.CompleteDataResponse response = userService.completeDataUser(user.email(), dto);
           return ResponseEntity.ok(response);
      }
 }

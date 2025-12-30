@@ -16,9 +16,8 @@ public final class UserDTO {
     }
 
     public record CompleteDataRequest(
-            String email,
-            BigDecimal monthlySalary,
-            BigDecimal expensiveThreshold) {
+            BigDecimal monthly_salary,
+            BigDecimal expensive_threshold) {
     }
 
     /* ========= RESPONSES ========= */
