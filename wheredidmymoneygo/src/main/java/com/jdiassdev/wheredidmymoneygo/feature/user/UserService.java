@@ -1,5 +1,7 @@
 package com.jdiassdev.wheredidmymoneygo.feature.user;
 
+import java.math.BigDecimal;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -64,29 +66,36 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
         return new UserDTO.GetByIdResponse(
-                user.getId(),
                 user.getName(),
-                user.getEmail());
+                user.getEmail(),
+                user.getMonthlySalary(),
+                user.getExpensiveThreshold());
     }
 
-    public UserDTO.CompleteDataResponse completeDataUser(String email, UserDTO.CompleteDataRequest dto) {
+    public UserDTO.PatchDataResponse completeDataUser(String email, UserDTO.PatchDataRequest dto) {
 
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
         System.out.println("User:>" + user.getName() + " " + dto.expensive_threshold() + " " + dto.monthly_salary());
 
-        if (dto.monthly_salary() != null) {
+        if (dto.name() != null && !dto.name().isBlank()) {
+            user.setName(dto.name());
+        }
+        if (dto.monthly_salary() != null && dto.monthly_salary().compareTo(BigDecimal.ZERO) >= 0) {
             user.setMonthlySalary(dto.monthly_salary());
         }
-        if (dto.expensive_threshold() != null) {
+        if (dto.expensive_threshold() != null && dto.expensive_threshold().compareTo(BigDecimal.ZERO) >= 0) {
             user.setExpensiveThreshold(dto.expensive_threshold());
         }
 
         user = userRepository.save(user);
 
-        return new UserDTO.CompleteDataResponse(
-                user.getEmail());
+        return new UserDTO.PatchDataResponse(
+                user.getName(),
+                user.getEmail(),
+                user.getMonthlySalary(),
+                user.getExpensiveThreshold());
     }
 
 }

@@ -26,13 +26,13 @@ public class UserController {
           this.userService = userService;
      }
 
-     @PostMapping("/auth/sign-up")
+     @PostMapping("/auth/register")
      public ResponseEntity<UserDTO.CreateResponse> create(@RequestBody @Valid UserDTO.CreateRequest dto) {
           UserDTO.CreateResponse response = userService.create(dto);
           return ResponseEntity.status(HttpStatus.CREATED).body(response);
      }
 
-     @PostMapping("/auth/sign-in")
+     @PostMapping("/auth/login")
      public ResponseEntity<UserDTO.LoginResponse> login(@RequestBody @Valid UserDTO.LoginRequest dto) {
           UserDTO.LoginResponse response = userService.login(dto);
           return ResponseEntity.ok(response);
@@ -45,10 +45,10 @@ public class UserController {
      }
 
      @PatchMapping("/complete-data")
-     public ResponseEntity<UserDTO.CompleteDataResponse> completeUserData(
+     public ResponseEntity<UserDTO.PatchDataResponse> completeUserData(
                @AuthenticationPrincipal AuthUser user,
-               @RequestBody @Valid UserDTO.CompleteDataRequest dto) {
-          UserDTO.CompleteDataResponse response = userService.completeDataUser(user.email(), dto);
+               @RequestBody @Valid UserDTO.PatchDataRequest dto) {
+          UserDTO.PatchDataResponse response = userService.completeDataUser(user.email(), dto);
           return ResponseEntity.ok(response);
      }
 }

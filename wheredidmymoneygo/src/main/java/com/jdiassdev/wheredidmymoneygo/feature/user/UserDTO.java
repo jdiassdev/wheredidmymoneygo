@@ -15,14 +15,19 @@ public final class UserDTO {
     public record LoginRequest(String email, String password) {
     }
 
-    public record CompleteDataRequest(
+    public record PatchDataRequest(
+            String name,
             BigDecimal monthly_salary,
             BigDecimal expensive_threshold) {
     }
 
     /* ========= RESPONSES ========= */
 
-    public record GetByIdResponse(Long id, String name, String email) {
+    public record GetByIdResponse(
+            String name,
+            String email,
+            BigDecimal monthly_salary,
+            BigDecimal expensive_threshold) {
     }
 
     public record CreateResponse(Long id, String name, String email) {
@@ -31,6 +36,10 @@ public final class UserDTO {
     public record LoginResponse(String token, String name) {
     }
 
-    public record CompleteDataResponse(String email) {
+    public record PatchDataResponse(
+            String name,
+            String email,
+            BigDecimal monthly_salary,
+            BigDecimal expensive_threshold) {
     }
 }
