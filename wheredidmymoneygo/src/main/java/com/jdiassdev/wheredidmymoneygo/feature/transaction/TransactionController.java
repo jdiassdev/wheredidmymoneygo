@@ -39,4 +39,12 @@ public class TransactionController {
                 new TransactionDTO.ListUserTransactionsRequest(category_id));
     }
 
+    @GetMapping("/totals-resume")
+    public TransactionDTO.TotalResumeTransactionsResponse totals(
+            @AuthenticationPrincipal AuthUser user,
+            @RequestParam(required = false) Long category_id) {
+        return transactionService.totalResume(
+                user.email(), new TransactionDTO.TotalResumeTransactionsRequest(category_id));
+    }
+
 }

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.jdiassdev.wheredidmymoneygo.dto.TransactionTotals;
 import com.jdiassdev.wheredidmymoneygo.entity.Category;
 import com.jdiassdev.wheredidmymoneygo.entity.Transaction;
 import com.jdiassdev.wheredidmymoneygo.entity.User;
@@ -73,10 +74,26 @@ public class TransactionService {
                                                 t.getDescription(),
                                                 t.getAmount(),
                                                 t.getCategory().getName(),
-                                                t.getCreatedAt()
-                                        )
-                                )
+                                                t.getCreatedAt()))
                                 .toList();
         }
 
+        public TransactionDTO.TotalResumeTransactionsResponse totalResume(
+                        String email,
+                        TransactionDTO.TotalResumeTransactionsRequest dto) {
+
+                User user = userRepository.findByEmail(email)
+                                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+
+                TransactionTotals totals = transactionRepository.getTotals(
+                                user.getId(),
+                                dto.category_id());
+
+                return new TransactionDTO.TotalResumeTransactionsResponse(
+                                totals.totalAmount(),
+                                totals.totalItems(),
+                                totals.minAmount(),
+                                totals.maxAmount());
+
+        }
 }

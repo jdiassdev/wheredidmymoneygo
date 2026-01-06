@@ -25,6 +25,10 @@ public final class TransactionDTO {
                         Long category_id) {
         }
 
+        public record TotalResumeTransactionsRequest(
+                        Long category_id) {
+        }
+
         /* ========= RESPONSES ========= */
 
         public record GetByIdResponse(Long id, String name, String email) {
@@ -45,6 +49,13 @@ public final class TransactionDTO {
                         LocalDateTime created_at
 
         ) {
+        }
+
+        public record TotalResumeTransactionsResponse(
+                        BigDecimal total_amount,
+                        Long total_itens,
+                        BigDecimal min_amount,
+                        BigDecimal max_amount) {
         }
 
 }
