@@ -1,6 +1,7 @@
 package com.jdiassdev.wheredidmymoneygo.feature.transaction;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -8,24 +9,42 @@ import jakarta.validation.constraints.Positive;
 
 public final class TransactionDTO {
 
-    private TransactionDTO() {
-    }
+        private TransactionDTO() {
+        }
 
-    public record CreateRequest(
+        public record CreateRequest(
 
-            @NotNull(message = "Valor é obrigatório") @Positive(message = "Valor deve ser maior que zero") BigDecimal amount,
+                        @NotNull(message = "Valor é obrigatório") @Positive(message = "Valor deve ser maior que zero") BigDecimal amount,
 
-            @NotNull(message = "Categoria é obrigatória") Long category_id,
+                        @NotNull(message = "Categoria é obrigatória") Long category_id,
 
-            @NotBlank(message = "Descrição é obrigatória") String description) {
-    }
+                        @NotBlank(message = "Descrição é obrigatória") String description) {
+        }
 
-    /* ========= RESPONSES ========= */
+        public record ListUserTransactionsRequest(
+                        Long category_id) {
+        }
 
-    public record GetByIdResponse(Long id, String name, String email) {
-    }
+        /* ========= RESPONSES ========= */
 
-    public record CreateResponse(BigDecimal amount, String message) {
-    }
+        public record GetByIdResponse(Long id, String name, String email) {
+        }
+
+        public record CreateResponse(
+                        String description,
+                        String category,
+                        BigDecimal amount,
+                        String message) {
+        }
+
+        public record ListUserTransactionsResponse(
+                        Long id,
+                        String description,
+                        BigDecimal amount,
+                        String category,
+                        LocalDateTime created_at
+
+        ) {
+        }
 
 }
