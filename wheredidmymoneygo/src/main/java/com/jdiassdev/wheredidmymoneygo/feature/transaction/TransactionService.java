@@ -46,9 +46,11 @@ public class TransactionService {
                 transactionRepository.save(transaction);
 
                 return new TransactionDTO.CreateResponse(
+                                transaction.getId(),
                                 transaction.getDescription(),
                                 transaction.getCategory().getName(),
                                 transaction.getAmount(),
+                                transaction.getCreatedAt(),
                                 "Gasto registrado com sucesso");
         }
 

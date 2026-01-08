@@ -35,9 +35,11 @@ public final class TransactionDTO {
         }
 
         public record CreateResponse(
+                        Long id,
                         String description,
                         String category,
                         BigDecimal amount,
+                        LocalDateTime created_at,
                         String message) {
         }
 
