@@ -22,7 +22,7 @@ public final class TransactionDTO {
         }
 
         public record ListUserTransactionsRequest(
-                        Long category_id) {
+                        Long category) {
         }
 
         public record TotalResumeTransactionsRequest(

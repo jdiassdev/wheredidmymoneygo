@@ -11,12 +11,17 @@ import com.jdiassdev.wheredidmymoneygo.entity.User;
 import com.jdiassdev.wheredidmymoneygo.feature.category.CategoryRepository;
 import com.jdiassdev.wheredidmymoneygo.feature.user.UserRepository;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Service
 public class TransactionService {
 
         private final TransactionRepository transactionRepository;
         private final UserRepository userRepository;
         private final CategoryRepository categoryRepository;
+
+        private static final Logger log = LoggerFactory.getLogger(TransactionService.class);
 
         public TransactionService(TransactionRepository transactionRepository,
                         UserRepository userRepository,
@@ -57,14 +62,17 @@ public class TransactionService {
         public List<TransactionDTO.ListUserTransactionsResponse> list(
                         String email,
                         TransactionDTO.ListUserTransactionsRequest dto) {
+
+                log.info("Chamando list de transações para user: {}", email);
+                log.info("Filtro de categoria: {}", dto.category());
                 User user = userRepository.findByEmail(email)
                                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
                 List<Transaction> transactions;
 
-                if (dto.category_id() != null) {
+                if (dto.category() != null) {
                         transactions = transactionRepository
-                                        .findByUserIdAndCategoryId(user.getId(), dto.category_id());
+                                        .findByUserIdAndCategory_Id(user.getId(), dto.category());
                 } else {
                         transactions = transactionRepository
                                         .findByUserId(user.getId());

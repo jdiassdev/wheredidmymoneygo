@@ -15,7 +15,7 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
 
     List<Transaction> findByUserId(Long userId);
 
-    List<Transaction> findByUserIdAndCategoryId(Long userId, Long categoryId);
+    List<Transaction> findByUserIdAndCategory_Id(Long userId, Long categoryId);
 
     @Query("""
                 select new com.jdiassdev.wheredidmymoneygo.dto.TransactionTotals(

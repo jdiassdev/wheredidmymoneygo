@@ -33,10 +33,10 @@ public class TransactionController {
     @GetMapping("/")
     public List<TransactionDTO.ListUserTransactionsResponse> list(
             @AuthenticationPrincipal AuthUser user,
-            @RequestParam(required = false) Long category_id) {
+            @RequestParam(required = false) Long category) {
         return transactionService.list(
                 user.email(),
-                new TransactionDTO.ListUserTransactionsRequest(category_id));
+                new TransactionDTO.ListUserTransactionsRequest(category));
     }
 
     @GetMapping("/totals-resume")
