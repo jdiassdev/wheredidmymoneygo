@@ -57,12 +57,19 @@ public class TransactionController {
             @RequestBody @Valid TransactionDTO.UpdateTransactionRequest dto) {
         return transactionService.updateT(user.email(), id, dto);
     }
-    // @PatchMapping("/{id}")
-    // public TransactionDTO.UpdateResponse update(
-    //         @AuthenticationPrincipal AuthUser user,
-    //         @PathVariable("id") Long id,
-    //         @RequestBody @Valid TransactionDTO.UpdateTransactionRequest dto) {
-    //     return transactionService.updateT(user.email(), id, dto);
-    // }
+
+    @PatchMapping("/{id}/activate")
+    public TransactionDTO.StatusResponse activate(
+            @AuthenticationPrincipal AuthUser user,
+            @PathVariable("id") Long id) {
+        return transactionService.activate(user.email(), id);
+    }
+
+    @PatchMapping("/{id}/inactivate")
+    public TransactionDTO.StatusResponse inactivate(
+            @AuthenticationPrincipal AuthUser user,
+            @PathVariable("id") Long id) {
+        return transactionService.inactivate(user.email(), id);
+    }
 
 }
