@@ -29,6 +29,12 @@ public final class TransactionDTO {
                         Long category_id) {
         }
 
+        public record UpdateTransactionRequest(
+                        String description,
+                        BigDecimal amount,
+                        Long category_id) {
+        }
+
         /* ========= RESPONSES ========= */
 
         public record GetByIdResponse(Long id, String name, String email) {
@@ -58,6 +64,17 @@ public final class TransactionDTO {
                         Long total_itens,
                         BigDecimal min_amount,
                         BigDecimal max_amount) {
+        }
+
+        public record UpdateResponse(
+                        String description,
+                        String category,
+                        BigDecimal amount) {
+        }
+
+        public record StatusResponse(
+                        Long id,
+                        String description) {
         }
 
 }

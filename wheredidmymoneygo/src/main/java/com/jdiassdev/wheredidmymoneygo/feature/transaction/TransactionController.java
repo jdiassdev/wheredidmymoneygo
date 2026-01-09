@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.jdiassdev.wheredidmymoneygo.dto.AuthUser;
 
 import jakarta.validation.Valid;
+import jakarta.websocket.server.PathParam;
 
 @RestController
 @RequestMapping("/transactions")
@@ -46,5 +49,20 @@ public class TransactionController {
         return transactionService.totalResume(
                 user.email(), new TransactionDTO.TotalResumeTransactionsRequest(category_id));
     }
+
+    @PatchMapping("/{id}")
+    public TransactionDTO.UpdateResponse update(
+            @AuthenticationPrincipal AuthUser user,
+            @PathVariable("id") Long id,
+            @RequestBody @Valid TransactionDTO.UpdateTransactionRequest dto) {
+        return transactionService.updateT(user.email(), id, dto);
+    }
+    // @PatchMapping("/{id}")
+    // public TransactionDTO.UpdateResponse update(
+    //         @AuthenticationPrincipal AuthUser user,
+    //         @PathVariable("id") Long id,
+    //         @RequestBody @Valid TransactionDTO.UpdateTransactionRequest dto) {
+    //     return transactionService.updateT(user.email(), id, dto);
+    // }
 
 }

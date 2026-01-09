@@ -77,8 +77,6 @@ public class UserService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
-        System.out.println("User:>" + user.getName() + " " + dto.expensive_threshold() + " " + dto.monthly_salary());
-
         if (dto.name() != null && !dto.name().isBlank()) {
             user.setName(dto.name());
         }

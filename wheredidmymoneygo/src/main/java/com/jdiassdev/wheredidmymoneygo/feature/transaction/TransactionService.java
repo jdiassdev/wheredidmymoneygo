@@ -1,6 +1,9 @@
 package com.jdiassdev.wheredidmymoneygo.feature.transaction;
 
+import java.math.BigDecimal;
 import java.util.List;
+
+import javax.management.RuntimeErrorException;
 
 import org.springframework.stereotype.Service;
 
@@ -63,8 +66,6 @@ public class TransactionService {
                         String email,
                         TransactionDTO.ListUserTransactionsRequest dto) {
 
-                log.info("Chamando list de transações para user: {}", email);
-                log.info("Filtro de categoria: {}", dto.category());
                 User user = userRepository.findByEmail(email)
                                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
@@ -105,5 +106,84 @@ public class TransactionService {
                                 totals.minAmount(),
                                 totals.maxAmount());
 
+        }
+
+        public TransactionDTO.UpdateResponse updateT(
+                        String email,
+                        Long id,
+                        TransactionDTO.UpdateTransactionRequest dto) {
+
+                User user = userRepository.findByEmail(email)
+                                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+
+                Transaction transaction = transactionRepository.findById(id)
+                                .orElseThrow(() -> new RuntimeException("Transação não encontrada"));
+
+                if (!transaction.getUser().getId().equals(user.getId())) {
+                        throw new RuntimeException("Acesso negado");
+                }
+
+                if (dto.description() != null && !dto.description().isBlank()) {
+                        transaction.setDescription(dto.description());
+                }
+
+                if (dto.category_id() != null && !dto.category_id().equals(transaction.getCategory().getId())) {
+
+                        Category category = categoryRepository.findById(dto.category_id())
+                                        .orElseThrow(() -> new RuntimeException("Categoria não encontrada"));
+
+                        transaction.setCategory(category);
+                }
+
+                if (dto.amount() != null && dto.amount().compareTo(BigDecimal.ZERO) > 0) {
+                        transaction.setAmount(dto.amount());
+                }
+
+                transactionRepository.save(transaction);
+
+                return new TransactionDTO.UpdateResponse(
+                                transaction.getDescription(),
+                                transaction.getCategory().getDescription(),
+                                transaction.getAmount());
+        }
+
+        public TransactionDTO.StatusResponse activate(String email, Long id) {
+
+                User user = userRepository.findByEmail(email)
+                                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+
+                Transaction transaction = transactionRepository.findById(id)
+                                .orElseThrow(() -> new RuntimeException("Transação não encontrada"));
+
+                if (!transaction.getUser().getId().equals(user.getId())) {
+                        throw new RuntimeException("Acesso negado");
+                }
+
+                transaction.setIsActive(true);
+                transactionRepository.save(transaction);
+
+                return new TransactionDTO.StatusResponse(
+                                transaction.getId(),
+                                transaction.getCategory().getDescription());
+        }
+
+        public TransactionDTO.StatusResponse inactivate(String email, Long id) {
+
+                User user = userRepository.findByEmail(email)
+                                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+
+                Transaction transaction = transactionRepository.findById(id)
+                                .orElseThrow(() -> new RuntimeException("Transação não encontrada"));
+
+                if (!transaction.getUser().getId().equals(user.getId())) {
+                        throw new RuntimeException("Acesso negado");
+                }
+
+                transaction.setIsActive(false);
+                transactionRepository.save(transaction);
+
+                return new TransactionDTO.StatusResponse(
+                                transaction.getId(),
+                                transaction.getCategory().getDescription());
         }
 }
