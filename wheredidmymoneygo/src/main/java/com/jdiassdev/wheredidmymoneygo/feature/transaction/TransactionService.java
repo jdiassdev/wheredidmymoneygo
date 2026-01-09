@@ -3,8 +3,6 @@ package com.jdiassdev.wheredidmymoneygo.feature.transaction;
 import java.math.BigDecimal;
 import java.util.List;
 
-import javax.management.RuntimeErrorException;
-
 import org.springframework.stereotype.Service;
 
 import com.jdiassdev.wheredidmymoneygo.dto.TransactionTotals;

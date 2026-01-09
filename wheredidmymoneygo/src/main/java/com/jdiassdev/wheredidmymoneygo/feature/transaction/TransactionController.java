@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.jdiassdev.wheredidmymoneygo.dto.AuthUser;
 
 import jakarta.validation.Valid;
-import jakarta.websocket.server.PathParam;
 
 @RestController
 @RequestMapping("/transactions")
