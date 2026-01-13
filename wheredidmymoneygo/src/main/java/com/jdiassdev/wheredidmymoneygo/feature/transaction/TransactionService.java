@@ -71,10 +71,10 @@ public class TransactionService {
 
                 if (dto.category() != null) {
                         transactions = transactionRepository
-                                        .findByUserIdAndCategory_Id(user.getId(), dto.category());
+                                        .findByUserIdAndCategory_IdAndIsActiveTrue(user.getId(), dto.category());
                 } else {
                         transactions = transactionRepository
-                                        .findByUserId(user.getId());
+                                        .findByUserIdAndIsActiveTrue(user.getId());
                 }
 
                 return transactions.stream()
@@ -96,7 +96,7 @@ public class TransactionService {
 
                 TransactionTotals totals = transactionRepository.getTotals(
                                 user.getId(),
-                                dto.category_id());
+                                dto.category());
 
                 return new TransactionDTO.TotalResumeTransactionsResponse(
                                 totals.totalAmount(),
@@ -130,7 +130,11 @@ public class TransactionService {
                         Category category = categoryRepository.findById(dto.category_id())
                                         .orElseThrow(() -> new RuntimeException("Categoria não encontrada"));
 
+                        log.info("Cateogria antes de att que vem no dto " + dto.category_id());
+                        log.info("Cateogria depois de att" + category.getDescription());
                         transaction.setCategory(category);
+                        log.info("Cateogria" + transaction.getCategory().getId() + "e id "
+                                        + transaction.getCategory().getDescription());
                 }
 
                 if (dto.amount() != null && dto.amount().compareTo(BigDecimal.ZERO) > 0) {
@@ -140,9 +144,11 @@ public class TransactionService {
                 transactionRepository.save(transaction);
 
                 return new TransactionDTO.UpdateResponse(
+                                transaction.getId(),
                                 transaction.getDescription(),
-                                transaction.getCategory().getDescription(),
-                                transaction.getAmount());
+                                transaction.getCategory().getName(),
+                                transaction.getAmount(),
+                                transaction.getCreatedAt());
         }
 
         public TransactionDTO.StatusResponse activate(String email, Long id) {
@@ -161,8 +167,7 @@ public class TransactionService {
                 transactionRepository.save(transaction);
 
                 return new TransactionDTO.StatusResponse(
-                                transaction.getId(),
-                                transaction.getCategory().getDescription());
+                                transaction.getId());
         }
 
         public TransactionDTO.StatusResponse inactivate(String email, Long id) {
@@ -181,7 +186,6 @@ public class TransactionService {
                 transactionRepository.save(transaction);
 
                 return new TransactionDTO.StatusResponse(
-                                transaction.getId(),
-                                transaction.getCategory().getDescription());
+                                transaction.getId());
         }
 }

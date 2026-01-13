@@ -17,6 +17,12 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
 
     List<Transaction> findByUserIdAndCategory_Id(Long userId, Long categoryId);
 
+    List<Transaction> findByUserIdAndIsActiveTrue(Long userId);
+
+    List<Transaction> findByUserIdAndCategory_IdAndIsActiveTrue(
+            Long userId,
+            Long categoryId);
+
     @Query("""
                 select new com.jdiassdev.wheredidmymoneygo.dto.TransactionTotals(
                     count(t),
@@ -26,7 +32,8 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
                 )
                 from Transaction t
                 where t.user.id = :userId
-                and (:categoryId is null or t.category.id = :categoryId)
+                  and t.isActive = true
+                  and (:categoryId is null or t.category.id = :categoryId)
             """)
     TransactionTotals getTotals(
             @Param("userId") Long userId,

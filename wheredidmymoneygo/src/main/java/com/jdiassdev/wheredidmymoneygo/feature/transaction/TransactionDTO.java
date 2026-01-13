@@ -26,7 +26,7 @@ public final class TransactionDTO {
         }
 
         public record TotalResumeTransactionsRequest(
-                        Long category_id) {
+                        Long category) {
         }
 
         public record UpdateTransactionRequest(
@@ -67,14 +67,15 @@ public final class TransactionDTO {
         }
 
         public record UpdateResponse(
+                        Long id,
                         String description,
                         String category,
-                        BigDecimal amount) {
+                        BigDecimal amount,
+                        LocalDateTime created_at) {
         }
 
         public record StatusResponse(
-                        Long id,
-                        String description) {
+                        Long id) {
         }
 
 }
