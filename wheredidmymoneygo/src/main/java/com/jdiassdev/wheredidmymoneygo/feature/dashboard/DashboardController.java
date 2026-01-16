@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.jdiassdev.wheredidmymoneygo.dto.AuthUser;
 import com.jdiassdev.wheredidmymoneygo.dto.CategoryTotalDTO;
 import com.jdiassdev.wheredidmymoneygo.dto.MonthlyEvolutionProjection;
+import com.jdiassdev.wheredidmymoneygo.feature.dashboard.DashboardDTO.MonthlyExpenseSummaryDTORes;
 
 @RestController
 @RequestMapping("/dashboard")
@@ -45,6 +46,14 @@ public class DashboardController {
     public List<MonthlyEvolutionProjection> getYearToDateEvo(
             @AuthenticationPrincipal AuthUser user) {
         return dashboardService.getYearToDateEvolution(user.email());
+    }
+
+    @GetMapping("/monthly-summary")
+    public MonthlyExpenseSummaryDTORes getCurrentMonth(
+            @AuthenticationPrincipal AuthUser user,
+            @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        return dashboardService.getCurrentMonth(user.email(),
+                new DashboardDTO.TopCaregoryMonthSummaryReqDTO(date));
     }
 
 }

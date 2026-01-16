@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import com.jdiassdev.wheredidmymoneygo.dto.CategoryTotalDTO;
 import com.jdiassdev.wheredidmymoneygo.dto.MonthlyEvolutionProjection;
 import com.jdiassdev.wheredidmymoneygo.entity.User;
+import com.jdiassdev.wheredidmymoneygo.feature.dashboard.DashboardDTO.MonthlyExpenseSummaryDTORes;
 import com.jdiassdev.wheredidmymoneygo.feature.user.UserRepository;
 
 @Service
@@ -89,6 +90,20 @@ public class DashboardService {
                                 .atTime(23, 59, 59);
 
                 return dashboardRepository.getMonthlyEvolution(user.getId(), start, end);
+        }
+
+        public MonthlyExpenseSummaryDTORes getCurrentMonth(String email,
+                        DashboardDTO.TopCaregoryMonthSummaryReqDTO dto) {
+
+                User user = userRepository.findByEmail(email)
+                                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+
+                YearMonth month = YearMonth.from(dto.date_reference());
+
+                LocalDateTime start = month.atDay(1).atStartOfDay();
+                LocalDateTime end = month.atEndOfMonth().atTime(LocalTime.MAX);
+
+                return dashboardRepository.getMonthlySummary(user.getId(), start, end);
         }
 
 }
